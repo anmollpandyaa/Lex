@@ -1,0 +1,32 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_WORD_LENGTH 100
+
+char smallest_word[MAX_WORD_LENGTH];
+int first_word = 1;
+
+void update_smallest_word(char *word) {
+    if (first_word || strlen(word) < strlen(smallest_word)) {
+        strcpy(smallest_word, word);
+        first_word = 0;
+    }
+}
+%}
+
+%%
+[a-zA-Z]+ {
+    update_smallest_word(yytext);
+}
+\n {
+    printf("Smallest word: %s\n", smallest_word);
+    first_word = 1;  // Reset for next line of input
+}
+.|\n { /* Ignore other characters */ }
+%%
+
+int main() {
+    yylex();
+    return 0;
+}
