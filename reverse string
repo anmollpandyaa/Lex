@@ -1,0 +1,21 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+void reverse(char *str) {
+    int len = strlen(str);
+    for (int i = len - 1; i >= 0; i--) {
+        putchar(str[i]);
+    }
+    putchar('\n');
+}
+%}
+
+%%
+.|\n    { reverse(yytext); }
+%%
+
+int main() {
+    yylex();
+    return 0;
+}
