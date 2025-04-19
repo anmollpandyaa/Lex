@@ -1,0 +1,46 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void yyerror(const char *s);
+int yylex();
+
+%}
+
+%union {
+    char *str;
+}
+
+%token BINARY
+%token EOL
+
+%%
+
+input:
+    | input line
+    ;
+
+line:
+    BINARY EOL { printf("Decimal: %d\n", binary_to_decimal($1)); free($1); }
+    ;
+
+%%
+
+int binary_to_decimal(char *binary) {
+    int decimal = 0;
+    while (*binary) {
+        decimal = decimal * 2 + (*binary - '0');
+        binary++;
+    }
+    return decimal;
+}
+
+void yyerror(const char *s) {
+    fprintf(stderr, "Error: %s\n", s);
+}
+
+int main() {
+    yyparse();
+    return 0;
+}
